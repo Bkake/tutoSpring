@@ -1,0 +1,88 @@
+package fr.free.bkake.business.usecase.user;
+
+
+import com.mysema.query.BooleanBuilder;
+import com.mysema.query.types.Predicate;
+import fr.free.bkake.business.constants.BusinessConstants;
+import fr.free.bkake.business.exception.BusinessException;
+import fr.free.bkake.business.model.UserInfo;
+import fr.free.bkake.business.predicates.BusinessPredicate;
+import fr.free.bkake.business.utils.BusinessUtils;
+import fr.free.bkake.core.domain.QUser;
+import fr.free.bkake.core.domain.User;
+import fr.free.bkake.core.repository.UserRespository;
+import org.apache.commons.lang3.StringUtils;
+import org.immutables.value.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Component
+@Transactional
+@Value.Enclosing
+public class FindUser {
+
+    @Inject
+    private UserRespository userRespository;
+
+
+    public Response execute(UserInfo request) throws BusinessException{
+
+        QUser user = QUser.user;
+
+        if (BusinessPredicate.requestIsNull.test(request)){
+               throw new BusinessException("FindUser request null value");
+        }
+
+        BooleanBuilder whereBuilder = new BooleanBuilder();
+
+        if (BusinessPredicate.emptyString.negate().test(request.number())) {
+            Predicate eqNumberPredicate = user.number.eq(request.number());
+            BusinessUtils.addOrClause(whereBuilder, eqNumberPredicate);
+        }
+
+        if (BusinessPredicate.emptyString.negate().test(request.firstName())) {
+            Predicate likeFirstNamePredicate = StringUtils.contains(request.firstName(), BusinessConstants._LIKEOPERATOR) ?
+                    user.firstName.like(request.firstName()) : user.firstName.eq(request.firstName());
+            BusinessUtils.addOrClause(whereBuilder, likeFirstNamePredicate);
+        }
+
+        if (BusinessPredicate.emptyString.negate().test(request.lastName())) {
+            Predicate likeLastNameUserPredicate = StringUtils.contains(request.lastName(), BusinessConstants._LIKEOPERATOR) ?
+                    user.lastName.like(request.lastName()) : user.lastName.eq(request.lastName());
+            BusinessUtils.addOrClause(whereBuilder, likeLastNameUserPredicate);
+        }
+
+        List<User> userReponse = (List<User>) userRespository.findAll(whereBuilder.getValue());
+
+         List<UserInfo> userInfos = userReponse.stream()
+                 .map(userResponse -> BusinessUtils.userInfoToUser(userResponse))
+                 .collect(Collectors.toList());
+
+        if(userInfos.isEmpty()) {
+            return ImmutableFindUser.Response.builder().status(Status.USER_FIND_NOTFOUND)
+                    .msg("FindUser saving success").build();
+        }
+
+        return ImmutableFindUser.Response.builder().status(Status.OK)
+                .userInfos(userInfos).msg("FindUser saving success").build();
+    }
+
+    @Value.Immutable
+    public interface Response {
+        @Nullable List<UserInfo> userInfos();
+
+        @Value.Parameter String msg();
+        @Value.Parameter
+        Status status();
+    }
+
+    public enum Status {
+        USER_FIND_NOTFOUND,
+        OK,
+    }
+}
