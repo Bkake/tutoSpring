@@ -9,12 +9,14 @@ import java.util.function.Predicate;
 
 public class BusinessPredicate {
 
-	public static Predicate<UserInfo> requestIsNull = getGenericPredicate(request -> request == null);
-	public static Predicate<String> emptyString = getGenericPredicate(s -> StringUtils.isBlank(s));
-	public static Predicate<User> notExistingUser = getGenericPredicate(user -> user == null);
+    public static final Predicate<UserInfo> requestIsNull = getGenericPredicate(request -> request == null);
+    public static final Predicate<String> isRequestFieldNotValid = getGenericPredicate(StringUtils::isBlank);
+    public static final Predicate<User> notExistingUser = getGenericPredicate(user -> user == null);
 
 
-	private static <T> Predicate<T> getGenericPredicate(Predicate<T> p) {
-	    return p;
-	}
+    private static <T> Predicate<T> getGenericPredicate(Predicate<T> p) {
+        return p;
+    }
+
+
 }

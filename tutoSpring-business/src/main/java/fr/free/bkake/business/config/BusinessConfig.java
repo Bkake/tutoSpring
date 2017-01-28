@@ -14,6 +14,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ComponentScan(basePackages = {"fr.free.bkake"})
 @EnableTransactionManagement
 @Import(value= {CoreConfig.class})
-public class BusinessConfig {
+class BusinessConfig {
 
 }

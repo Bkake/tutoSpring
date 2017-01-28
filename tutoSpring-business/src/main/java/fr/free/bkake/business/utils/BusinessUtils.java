@@ -6,8 +6,9 @@ import fr.free.bkake.business.model.ImmutableUserInfo;
 import fr.free.bkake.business.model.UserInfo;
 import fr.free.bkake.core.domain.User;
 
+
 public class BusinessUtils {
-	
+
 	public static void addOrClause(BooleanBuilder whereBuilder, Predicate likePredicate) {
 		BooleanBuilder booleanBuilder =  whereBuilder.or(likePredicate);
 		whereBuilder.or(booleanBuilder);
@@ -35,4 +36,5 @@ public class BusinessUtils {
 				.address(user.getAddress())
 				.build();
 	}
+
 }

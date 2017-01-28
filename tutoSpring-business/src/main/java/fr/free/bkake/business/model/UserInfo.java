@@ -9,10 +9,10 @@ import javax.annotation.Nullable;
 
 @Value.Immutable
 public interface UserInfo {
-   String number();
-   String firstName();
-   String lastName();
-   CivilityType civilityType();
-   SexType sexType();
+   @Nullable String number();
+   @Nullable String firstName();
+   @Nullable String lastName();
+   @Nullable CivilityType civilityType();
+   @Nullable SexType sexType();
    @Nullable Address address();
 }

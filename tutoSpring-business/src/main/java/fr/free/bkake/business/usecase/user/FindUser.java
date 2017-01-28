@@ -40,49 +40,48 @@ public class FindUser {
 
         BooleanBuilder whereBuilder = new BooleanBuilder();
 
-        if (BusinessPredicate.emptyString.negate().test(request.number())) {
+        if (BusinessPredicate.isRequestFieldNotValid.negate().test(request.number())) {
             Predicate eqNumberPredicate = user.number.eq(request.number());
             BusinessUtils.addOrClause(whereBuilder, eqNumberPredicate);
         }
 
-        if (BusinessPredicate.emptyString.negate().test(request.firstName())) {
+        if (BusinessPredicate.isRequestFieldNotValid.negate().test(request.firstName())) {
             Predicate likeFirstNamePredicate = StringUtils.contains(request.firstName(), BusinessConstants._LIKEOPERATOR) ?
                     user.firstName.like(request.firstName()) : user.firstName.eq(request.firstName());
             BusinessUtils.addOrClause(whereBuilder, likeFirstNamePredicate);
         }
 
-        if (BusinessPredicate.emptyString.negate().test(request.lastName())) {
+        if (BusinessPredicate.isRequestFieldNotValid.negate().test(request.lastName())) {
             Predicate likeLastNameUserPredicate = StringUtils.contains(request.lastName(), BusinessConstants._LIKEOPERATOR) ?
                     user.lastName.like(request.lastName()) : user.lastName.eq(request.lastName());
             BusinessUtils.addOrClause(whereBuilder, likeLastNameUserPredicate);
         }
 
-        List<User> userReponse = (List<User>) userRespository.findAll(whereBuilder.getValue());
+        List<User> userResponses = (List<User>) userRespository.findAll(whereBuilder.getValue());
 
-         List<UserInfo> userInfos = userReponse.stream()
-                 .map(userResponse -> BusinessUtils.userInfoToUser(userResponse))
+         List<UserInfo> userInfos = userResponses.stream()
+                 .map(BusinessUtils::userInfoToUser)
                  .collect(Collectors.toList());
 
         if(userInfos.isEmpty()) {
-            return ImmutableFindUser.Response.builder().status(Status.USER_FIND_NOTFOUND)
-                    .msg("FindUser saving success").build();
+            return ImmutableFindUser.Response.builder()
+                    .status(Status.EMPTY).build();
         }
 
-        return ImmutableFindUser.Response.builder().status(Status.OK)
-                .userInfos(userInfos).msg("FindUser saving success").build();
+        return ImmutableFindUser.Response.builder()
+                .status(Status.OK).userInfos(userInfos).build();
     }
 
     @Value.Immutable
     public interface Response {
         @Nullable List<UserInfo> userInfos();
 
-        @Value.Parameter String msg();
         @Value.Parameter
         Status status();
     }
 
     public enum Status {
-        USER_FIND_NOTFOUND,
+        EMPTY,
         OK,
     }
 }
