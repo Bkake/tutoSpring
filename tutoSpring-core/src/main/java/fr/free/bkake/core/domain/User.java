@@ -18,15 +18,9 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 
 @Entity
@@ -34,11 +28,15 @@ import java.util.Optional;
 @Getter
 @Setter
 @RequiredArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode
 @ToString
-public class User extends AbstractEntity implements Serializable {
+public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    protected Long id;
 
     @Column(length = 10, nullable = false, unique = true)
     private String number;
@@ -50,16 +48,13 @@ public class User extends AbstractEntity implements Serializable {
     private String lastName;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 1, nullable = false)
+    @Column(length = 1)
     private SexType sexType;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 5, nullable = false)
+    @Column(length = 5)
     private CivilityType civilityType;
 
     @Embedded
     private Address address;
-
-    @OneToMany(mappedBy = "user")
-    private List<Account> accounts;
 }
