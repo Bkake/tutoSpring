@@ -1,6 +1,8 @@
 package fr.free.bkake.business.usecase.user;
 
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.mysema.query.BooleanBuilder;
 import com.mysema.query.types.Predicate;
 import fr.free.bkake.business.constants.BusinessConstants;
@@ -14,7 +16,6 @@ import fr.free.bkake.core.repository.UserRespository;
 import org.apache.commons.lang3.StringUtils;
 import org.immutables.value.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -22,7 +23,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-@Transactional
 @Value.Enclosing
 public class FindUser {
 
@@ -73,6 +73,8 @@ public class FindUser {
     }
 
     @Value.Immutable
+    @JsonSerialize(as = ImmutableFindUser.Response.class)
+    @JsonDeserialize(as = ImmutableFindUser.Response.class)
     public interface Response {
         @Nullable List<UserInfo> userInfos();
 

@@ -10,6 +10,7 @@
     <modules>
         <module>tutoSpring-core</module>
         <module>tutoSpring-business</module>
+        <module>tutoSpring-rest</module>
     </modules>
 
     <packaging>pom</packaging>

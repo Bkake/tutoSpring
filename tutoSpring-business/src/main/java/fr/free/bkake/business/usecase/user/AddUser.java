@@ -1,5 +1,7 @@
 package fr.free.bkake.business.usecase.user;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import fr.free.bkake.business.exception.BusinessException;
 import fr.free.bkake.business.model.UserInfo;
 import fr.free.bkake.business.predicates.BusinessPredicate;
@@ -8,13 +10,11 @@ import fr.free.bkake.core.domain.User;
 import fr.free.bkake.core.repository.UserRespository;
 import org.immutables.value.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.util.Optional;
 
 @Component
-@Transactional
 @Value.Enclosing
 public class AddUser {
 
@@ -59,8 +59,11 @@ public class AddUser {
     }
 
     @Value.Immutable
+    @JsonSerialize(as = ImmutableAddUser.Response.class)
+    @JsonDeserialize(as = ImmutableAddUser.Response.class)
     public interface Response {
-        Optional<Long> userId();
+        @Nullable Long userId();
+
         Status status();
     }
 
