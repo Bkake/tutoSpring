@@ -1,2 +1,2 @@
 # tutoSpring
-Tutoriel spring Rest API/MVC
+Tutoriel spring Rest API
