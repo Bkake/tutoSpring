@@ -1,6 +1,5 @@
 package fr.free.bkake.business.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import fr.free.bkake.core.domain.embaddable.Address;
@@ -11,7 +10,6 @@ import org.immutables.value.Value;
 import javax.annotation.Nullable;
 
 @Value.Immutable
-@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(as = ImmutableUserInfo.class)
 @JsonDeserialize(as = ImmutableUserInfo.class)
 public interface UserInfo {
