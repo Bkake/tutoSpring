@@ -1,0 +1,22 @@
+# dev config
+spring:
+  spring.profiles: dev
+  datasource:
+    url: jdbc:h2:mem:mydb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;TRACE_LEVEL_SYSTEM_OUT=0
+    username: sa
+    password:
+    pool-size: 30
+
+app:
+  spring.profiles: prod
+  datasource:
+    url: jdbc:mysql://localhost:33066/dbProd
+    username: root
+    password:
+    maximum-pool-size: 30
+
+
+# activation profile
+#spring.datasource.initialize: true
+spring.profiles.active: prod
+#spring.jpa.show-sql: true
